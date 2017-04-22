@@ -28,6 +28,8 @@ def main():
 	paddle1 = pygame.Rect(PADDLEOFFSET,playerOnePosition,LINETHICKNESS,PADDLESIZE)
 	paddle2 = pygame.Rect(WINDOWWIDTH - PADDLEOFFSET - LINETHICKNESS,playerTwoPosition,LINETHICKNESS,PADDLESIZE)
 	ball = pygame.Rect(ballX,ballY,LINETHICKNESS,LINETHICKNESS)
+	ballDirX = 1
+	ballDirY = 1
 
 	def drawArena():
 		DISPLAYSURF.fill(BLACK)
@@ -39,6 +41,15 @@ def main():
 
 	def drawBall(ball):
 		pygame.draw.rect(DISPLAYSURF,WHITE,ball)
+
+	def moveBall(ball, ballDirX, ballDirY):
+		ball.x += ballDirX
+		ball.y += ballDirY
+		#BROKEN: ballDirY is not mutating as expected
+		if ball.top == (LINETHICKNESS) or ball.bottom == (WINDOWHEIGHT- LINETHICKNESS):
+			ballDirY *= -1
+		if ball.left == (LINETHICKNESS) or ball.right == (WINDOWWIDTH- LINETHICKNESS):
+			ballDirX *= -1
 
 	while True:
 		for event in pygame.event.get():
@@ -53,6 +64,8 @@ def main():
 		drawPaddle(paddle1)
 		drawPaddle(paddle2)
 		drawBall(ball)
+		moveBall(ball, ballDirX, ballDirY)
+		print(ballDirX,ballDirY)
 
 if __name__ == '__main__':
 	main()
