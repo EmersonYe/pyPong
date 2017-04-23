@@ -46,12 +46,32 @@ def main():
 		ball.x += ballDirX
 		ball.y += ballDirY
 
-	def checkEdgeCollision(ball, ballDirX, ballDirY):
+	def checkCollision(ball, ballDirX, ballDirY):
 		if ball.top == (LINETHICKNESS) or ball.bottom == (WINDOWHEIGHT- LINETHICKNESS):
 			ballDirY *= -1
 		if ball.left == (LINETHICKNESS) or ball.right == (WINDOWWIDTH- LINETHICKNESS):
 			ballDirX *= -1
+		#ball direction is right after touching paddle1 front
+		if (ball.left == PADDLEOFFSET+LINETHICKNESS) and ((ball.bottom >= paddle1.top) and (ball.top <= paddle1.bottom)):
+			ballDirX = 1
+		#ball direction is left after touching paddle2 front
+		if (ball.right == WINDOWWIDTH - (PADDLEOFFSET+LINETHICKNESS)) and ((ball.bottom >= paddle2.top) and (ball.top <= paddle2.bottom)):
+			ballDirX = -1
 		return ballDirX, ballDirY
+
+	def artificialIntelligence(ball, ballDirX,paddle1):
+		if ballDirX == 1:
+			if paddle1.centery < WINDOWHEIGHT/2:
+				paddle1.centery+=1
+			elif paddle1.centery > WINDOWHEIGHT/2:
+				paddle1.y-=1
+		elif ballDirX == -1:
+			if ball.y < paddle1.y + PADDLESIZE/2:
+				paddle1.y-=1
+			elif ball.y > paddle1.y + PADDLESIZE/2 and ball.y < WINDOWHEIGHT - LINETHICKNESS - PADDLESIZE:
+				paddle1.y+=1
+		
+		return paddle1.y
 
 	while True:
 		for event in pygame.event.get():
@@ -60,7 +80,8 @@ def main():
 				sys.exit()
 			elif event.type == MOUSEMOTION:
 				mouseX, mouseY = event.pos
-				paddle1.y = mouseY
+				if (mouseY < WINDOWHEIGHT - PADDLESIZE):
+					paddle2.y = mouseY
 
 		pygame.display.update()
 		FPSCLOCK.tick(FPS)
@@ -70,7 +91,8 @@ def main():
 		drawPaddle(paddle2)
 		drawBall(ball)
 		moveBall(ball, ballDirX, ballDirY)
-		ballDirX,ballDirY = checkEdgeCollision(ball,ballDirX,ballDirY)
+		ballDirX,ballDirY = checkCollision(ball,ballDirX,ballDirY)
+		paddle1.y = artificialIntelligence(ball, ballDirX, paddle1)
 
 if __name__ == '__main__':
 	main()
