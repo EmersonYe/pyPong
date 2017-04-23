@@ -18,18 +18,9 @@ def main():
 	FPSCLOCK = pygame.time.Clock()
 	DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))
 	pygame.display.set_caption("Pong")
-
-	ballX = WINDOWWIDTH/2 - LINETHICKNESS/2
-	ballY = WINDOWHEIGHT/2 - LINETHICKNESS/2
-
-	playerOnePosition = (WINDOWHEIGHT - PADDLESIZE)/2
-	playerTwoPosition = (WINDOWHEIGHT - PADDLESIZE)/2
-
-	paddle1 = pygame.Rect(PADDLEOFFSET,playerOnePosition,LINETHICKNESS,PADDLESIZE)
-	paddle2 = pygame.Rect(WINDOWWIDTH - PADDLEOFFSET - LINETHICKNESS,playerTwoPosition,LINETHICKNESS,PADDLESIZE)
-	ball = pygame.Rect(ballX,ballY,LINETHICKNESS,LINETHICKNESS)
-	ballDirX = 1
-	ballDirY = 1
+	global BASICFONT, BASICFONTSIZE
+	BASICFONTSIZE=20
+	BASICFONT = pygame.font.Font('freesansbold.ttf', BASICFONTSIZE)
 
 	def drawArena():
 		DISPLAYSURF.fill(BLACK)
@@ -73,6 +64,34 @@ def main():
 		
 		return paddle1.y
 
+	def checkScore(ball, paddle2, score, ballDirX):
+		if ball.right >= WINDOWWIDTH - LINETHICKNESS*2:
+			score = 0
+		elif ballDirX == -1 and (ball.right == WINDOWWIDTH - (PADDLEOFFSET+LINETHICKNESS)) and ((ball.bottom >= paddle2.top) and (ball.top <= paddle2.bottom)):
+			score+=1
+		elif ball.right == WINDOWWIDTH - LINETHICKNESS:
+			score += 5
+		return score
+
+	def displayScore(score):
+		resultSurf = BASICFONT.render('{0}'.format(score), True, WHITE)
+		resultRect = resultSurf.get_rect()
+		resultRect.topleft = (WINDOWWIDTH - 150,25)
+		DISPLAYSURF.blit(resultSurf,resultRect)
+
+	ballX = WINDOWWIDTH/2 - LINETHICKNESS/2
+	ballY = WINDOWHEIGHT/2 - LINETHICKNESS/2
+
+	playerOnePosition = (WINDOWHEIGHT - PADDLESIZE)/2
+	playerTwoPosition = (WINDOWHEIGHT - PADDLESIZE)/2
+
+	paddle1 = pygame.Rect(PADDLEOFFSET,playerOnePosition,LINETHICKNESS,PADDLESIZE)
+	paddle2 = pygame.Rect(WINDOWWIDTH - PADDLEOFFSET - LINETHICKNESS,playerTwoPosition,LINETHICKNESS,PADDLESIZE)
+	ball = pygame.Rect(ballX,ballY,LINETHICKNESS,LINETHICKNESS)
+	ballDirX = 1
+	ballDirY = 1
+	score = 0
+
 	while True:
 		for event in pygame.event.get():
 			if event.type == QUIT:
@@ -93,6 +112,8 @@ def main():
 		moveBall(ball, ballDirX, ballDirY)
 		ballDirX,ballDirY = checkCollision(ball,ballDirX,ballDirY)
 		paddle1.y = artificialIntelligence(ball, ballDirX, paddle1)
+		score = checkScore(ball, paddle2, score, ballDirX)
+		displayScore(score)
 
 if __name__ == '__main__':
 	main()
