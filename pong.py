@@ -45,17 +45,22 @@ def main():
 	def moveBall(ball, ballDirX, ballDirY):
 		ball.x += ballDirX
 		ball.y += ballDirY
-		#BROKEN: ballDirY is not mutating as expected
+
+	def checkEdgeCollision(ball, ballDirX, ballDirY):
 		if ball.top == (LINETHICKNESS) or ball.bottom == (WINDOWHEIGHT- LINETHICKNESS):
 			ballDirY *= -1
 		if ball.left == (LINETHICKNESS) or ball.right == (WINDOWWIDTH- LINETHICKNESS):
 			ballDirX *= -1
+		return ballDirX, ballDirY
 
 	while True:
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				pygame.quit()
 				sys.exit()
+			elif event.type == MOUSEMOTION:
+				mouseX, mouseY = event.pos
+				paddle1.y = mouseY
 
 		pygame.display.update()
 		FPSCLOCK.tick(FPS)
@@ -65,7 +70,7 @@ def main():
 		drawPaddle(paddle2)
 		drawBall(ball)
 		moveBall(ball, ballDirX, ballDirY)
-		print(ballDirX,ballDirY)
+		ballDirX,ballDirY = checkEdgeCollision(ball,ballDirX,ballDirY)
 
 if __name__ == '__main__':
 	main()
