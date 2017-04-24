@@ -2,6 +2,7 @@ import pygame, sys
 from pygame.locals import *
 
 FPS = 200
+SPEEDFACTOR = 1
 WINDOWWIDTH = 400
 WINDOWHEIGHT = 300
 
@@ -34,13 +35,13 @@ def main():
 		pygame.draw.rect(DISPLAYSURF,WHITE,ball)
 
 	def moveBall(ball, ballDirX, ballDirY):
-		ball.x += ballDirX
-		ball.y += ballDirY
+		ball.x += ballDirX * SPEEDFACTOR
+		ball.y += ballDirY * SPEEDFACTOR
 
 	def checkCollision(ball, ballDirX, ballDirY):
-		if ball.top == (LINETHICKNESS) or ball.bottom == (WINDOWHEIGHT- LINETHICKNESS):
+		if ball.top >0 (LINETHICKNESS) or ball.bottom <= (WINDOWHEIGHT- LINETHICKNESS):
 			ballDirY *= -1
-		if ball.left == (LINETHICKNESS) or ball.right == (WINDOWWIDTH- LINETHICKNESS):
+		if ball.left <= (LINETHICKNESS) or ball.right >= (WINDOWWIDTH- LINETHICKNESS):
 			ballDirX *= -1
 		#ball direction is right after touching paddle1 front
 		if (ball.left == PADDLEOFFSET+LINETHICKNESS) and ((ball.bottom >= paddle1.top) and (ball.top <= paddle1.bottom)):
@@ -69,7 +70,7 @@ def main():
 			score = 0
 		elif ballDirX == -1 and (ball.right == WINDOWWIDTH - (PADDLEOFFSET+LINETHICKNESS)) and ((ball.bottom >= paddle2.top) and (ball.top <= paddle2.bottom)):
 			score+=1
-		elif ball.right == WINDOWWIDTH - LINETHICKNESS:
+		elif ball.left <= LINETHICKNESS:
 			score += 5
 		return score
 
