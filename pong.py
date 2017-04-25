@@ -2,7 +2,7 @@ import pygame, sys
 from pygame.locals import *
 
 FPS = 200
-SPEEDFACTOR = 5
+SPEEDFACTOR = 1 #cannot be any other value (except 5)
 WINDOWWIDTH = 400
 WINDOWHEIGHT = 300
 
@@ -35,8 +35,8 @@ def main():
 		pygame.draw.rect(DISPLAYSURF,WHITE,ball)
 
 	def moveBall(ball, ballDirX, ballDirY):
-		ball.x += ballDirX * SPEEDFACTOR
-		ball.y += ballDirY * SPEEDFACTOR
+		ball.x += ballDirX
+		ball.y += ballDirY
 
 	def checkCollision(ball, ballDirX, ballDirY):
 		if ball.top == (LINETHICKNESS) or ball.bottom == (WINDOWHEIGHT- LINETHICKNESS):
