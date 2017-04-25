@@ -2,7 +2,7 @@ import pygame, sys
 from pygame.locals import *
 
 FPS = 200
-SPEEDFACTOR = 1
+SPEEDFACTOR = 5
 WINDOWWIDTH = 400
 WINDOWHEIGHT = 300
 
@@ -39,9 +39,9 @@ def main():
 		ball.y += ballDirY * SPEEDFACTOR
 
 	def checkCollision(ball, ballDirX, ballDirY):
-		if ball.top >0 (LINETHICKNESS) or ball.bottom <= (WINDOWHEIGHT- LINETHICKNESS):
+		if ball.top == (LINETHICKNESS) or ball.bottom == (WINDOWHEIGHT- LINETHICKNESS):
 			ballDirY *= -1
-		if ball.left <= (LINETHICKNESS) or ball.right >= (WINDOWWIDTH- LINETHICKNESS):
+		if ball.left == (LINETHICKNESS) or ball.right == (WINDOWWIDTH- LINETHICKNESS):
 			ballDirX *= -1
 		#ball direction is right after touching paddle1 front
 		if (ball.left == PADDLEOFFSET+LINETHICKNESS) and ((ball.bottom >= paddle1.top) and (ball.top <= paddle1.bottom)):
